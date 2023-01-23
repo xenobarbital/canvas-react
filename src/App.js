@@ -10,7 +10,6 @@ function App() {
   // pixel RGB tracking
   const [pixelRgb, setPixelRgb] = useState('Hover your mouse over the image');
 
-
   const imageRef = useRef(null);
   const canvasRefOne = useRef(null);
 
@@ -33,7 +32,7 @@ function App() {
     const ctxOne = canvasOne.getContext('2d', { willReadFrequently: true });
     const image = imageRef.current;
 
-    image.addEventListener("load", ({target: img}) => {
+    image.addEventListener("load", () => {
       const { width, height } = canvasSize;
       ctxOne.drawImage(image, 0, 0, width, height, 0, 0, width, height);
     });
