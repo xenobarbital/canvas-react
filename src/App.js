@@ -7,6 +7,9 @@ function App() {
   const [x, setX] = useState();
   const [y, setY] = useState();
 
+  // pixel RGB tracking
+  const [pixelRgb, setPixelRgb] = useState('Hover your mouse over the image');
+
 
   const imageRef = useRef(null);
   const canvasRefOne = useRef(null);
@@ -27,7 +30,7 @@ function App() {
 
   useEffect(() => {
     const canvasOne = canvasRefOne.current;
-    const ctxOne = canvasOne.getContext('2d');
+    const ctxOne = canvasOne.getContext('2d', { willReadFrequently: true });
     const image = imageRef.current;
 
     image.addEventListener("load", ({target: img}) => {
@@ -52,6 +55,12 @@ function App() {
     y: event.pageY - y,
   })
 
+  const rgbToHex = (r, g, b) => {
+    if (r > 255 || g > 255 || b > 255)
+      // eslint-disable-next-line no-throw-literal
+      throw "Invalid color component";
+    return ((r << 16) | (g << 8) | b).toString(16);
+  } 
 
   // handle pointer hovering over canvas
   const mouseMoveHandle = (e) => {
@@ -59,12 +68,13 @@ function App() {
     const ctxOne = canvasOne.getContext('2d');
     const eventLocation = getEventLocation(canvasOne, e)
     const { data } = ctxOne.getImageData(eventLocation.x, eventLocation.y, 1, 1);
-    console.log('pixel data', data)
+    const hex = "#" + ("000000" + rgbToHex(data[0], data[1], data[2])).slice(-6);
+    setPixelRgb(hex);
   }
 
   return (
     <>
-      <h1>Kek</h1>
+      <h1>{pixelRgb}</h1>
       <div className='image'>
         <img ref={imageRef} src={beach} alt="beach"/>
       </div>
