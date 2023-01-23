@@ -8,7 +8,7 @@ function App() {
   const [y, setY] = useState();
 
   // pixel RGB tracking
-  const [pixelRgb, setPixelRgb] = useState('Hover your mouse over the image');
+  const [pixelRgb, setPixelRgb] = useState('');
 
   const imageRef = useRef(null);
   const canvasRefOne = useRef(null);
@@ -29,13 +29,13 @@ function App() {
   };
 
   useEffect(() => {
-    const canvasOne = canvasRefOne.current;
-    const ctxOne = canvasOne.getContext('2d', { willReadFrequently: true });
+    const canvas = canvasRefOne.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const image = imageRef.current;
 
     image.addEventListener("load", () => {
       const { width, height } = canvasSize;
-      ctxOne.drawImage(image, 0, 0, width, height, 0, 0, width, height);
+      ctx.drawImage(image, 0, 0, width, height, 0, 0, width, height);
     });
   }, [canvasSize])
 
@@ -50,8 +50,14 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const canvas = canvasRefTwo.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.arc(60, 60, 60, 0, 2 * Math.PI);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = pixelRgb ? pixelRgb : '#d9d9d9';
+    ctx.stroke();
 
-  }, []);
+  }, [pixelRgb, x, y]);
 
   // get event coordinates
   const getEventLocation = (event) => ({
@@ -79,7 +85,7 @@ function App() {
 
   return (
     <>
-      <h1>{pixelRgb}</h1>
+      <h1>{pixelRgb ? pixelRgb : 'Hover pointer over the picture'}</h1>
       <div className='image'>
         <img ref={imageRef} src={beach} alt="beach"/>
       </div>
@@ -87,8 +93,8 @@ function App() {
         <canvas
           ref={canvasRefTwo}
           className="canvasSmall"
-          width="160"
-          height="160"
+          width="120"
+          height="120"
           />
       </div>
       <canvas

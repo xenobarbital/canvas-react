@@ -7,14 +7,14 @@
 }
 
 .roundContainer {
-  width: 160px;
-  height: 160px;
-  border-radius: 80px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #fff;
+  border-radius: 60px;
   overflow: hidden;
 }
 
 .canvasSmall {
-  background-color: #875421;
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
 }
