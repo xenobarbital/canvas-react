@@ -50,11 +50,12 @@ function App() {
   }, []);
 
   // get event coordinates
-  const getEventLocation = (element, event) => ({
+  const getEventLocation = (event) => ({
     x: event.pageX - x,
     y: event.pageY - y,
   })
 
+  // rgb to hex converter
   const rgbToHex = (r, g, b) => {
     if (r > 255 || g > 255 || b > 255)
       // eslint-disable-next-line no-throw-literal
