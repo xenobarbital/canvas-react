@@ -12,6 +12,7 @@ function App() {
 
   const imageRef = useRef(null);
   const canvasRefOne = useRef(null);
+  const canvasRefTwo = useRef(null);
 
   const canvasSize = useMemo(() => ({
     height: 1080,
@@ -21,9 +22,9 @@ function App() {
   // get coordinates of canvas element
   const getCanvasPosition = () => {
     const x = canvasRefOne.current.offsetLeft;
-    setX(x);
-
     const y = canvasRefOne.current.offsetTop;
+    
+    setX(x);
     setY(y);
   };
 
@@ -48,6 +49,10 @@ function App() {
     window.addEventListener("resize", getCanvasPosition);
   }, []);
 
+  useEffect(() => {
+
+  }, []);
+
   // get event coordinates
   const getEventLocation = (event) => ({
     x: event.pageX - x,
@@ -66,7 +71,7 @@ function App() {
   const mouseMoveHandle = (e) => {
     const canvasOne = canvasRefOne.current;
     const ctxOne = canvasOne.getContext('2d');
-    const eventLocation = getEventLocation(canvasOne, e)
+    const eventLocation = getEventLocation(e);
     const { data } = ctxOne.getImageData(eventLocation.x, eventLocation.y, 1, 1);
     const hex = "#" + ("000000" + rgbToHex(data[0], data[1], data[2])).slice(-6);
     setPixelRgb(hex);
@@ -78,10 +83,18 @@ function App() {
       <div className='image'>
         <img ref={imageRef} src={beach} alt="beach"/>
       </div>
+      <div className="roundContainer">
+        <canvas
+          ref={canvasRefTwo}
+          className="canvasSmall"
+          width="160"
+          height="160"
+          />
+      </div>
       <canvas
         onMouseMove={mouseMoveHandle}
         ref={canvasRefOne}
-        className='canvasBig'
+        className="canvasBig"
         {... canvasSize}
       />
     </>

@@ -5,3 +5,16 @@
 .canvasBig {
   width: 90%;
 }
+
+.roundContainer {
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+  overflow: hidden;
+}
+
+.canvasSmall {
+  background-color: #875421;
+  width: 160px;
+  height: 160px;
+}
