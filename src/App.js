@@ -25,11 +25,8 @@ function App() {
 
   // get coordinates of canvas element
   const getCanvasPosition = () => {
-    const x = canvasRefOne.current.offsetLeft;
-    const y = canvasRefOne.current.offsetTop;
-    
-    setX(x);
-    setY(y);
+    setX(canvasRefOne.current.offsetLeft);
+    setY(canvasRefOne.current.offsetTop);
   };
 
   useEffect(() => {
@@ -94,7 +91,7 @@ function App() {
   return (
     <>
       <div className="topContainer">
-        <label>
+        <label title="Click to enable picker tool">
           <img className="pickerIcon" src={icon} alt="picker" />
           <input type="checkbox" onChange={handlePicker} />
         </label>
