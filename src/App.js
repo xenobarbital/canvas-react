@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './App.css';
 import beach from './assets/tropical_beach.jpg';
+import icon from './assets/IconColorPicker.svg';
 
 function App() {
   // Main canvas location
@@ -9,6 +10,9 @@ function App() {
 
   // pixel RGB tracking
   const [pixelRgb, setPixelRgb] = useState('');
+
+  // toggle picker
+  const [enabled, setEnabled] = useState(false);
 
   const imageRef = useRef(null);
   const canvasRefOne = useRef(null);
@@ -52,12 +56,10 @@ function App() {
   useEffect(() => {
     const canvas = canvasRefTwo.current;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    ctx.arc(60, 60, 60, 0, 2 * Math.PI);
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = pixelRgb ? pixelRgb : '#d9d9d9';
-    ctx.stroke();
+    ctx.fillStyle = (pixelRgb && enabled) ? pixelRgb : '#d9d9d9';
+    ctx.fillRect(0, 0, 60, 60);
 
-  }, [pixelRgb, x, y]);
+  }, [enabled, pixelRgb, x, y]);
 
   // get event coordinates
   const getEventLocation = (event) => ({
@@ -75,28 +77,44 @@ function App() {
 
   // handle pointer hovering over canvas
   const mouseMoveHandle = (e) => {
-    const canvasOne = canvasRefOne.current;
-    const ctxOne = canvasOne.getContext('2d');
-    const eventLocation = getEventLocation(e);
-    const { data } = ctxOne.getImageData(eventLocation.x, eventLocation.y, 1, 1);
-    const hex = "#" + ("000000" + rgbToHex(data[0], data[1], data[2])).slice(-6);
-    setPixelRgb(hex);
+    if (enabled) {
+      const canvasOne = canvasRefOne.current;
+      const ctxOne = canvasOne.getContext('2d');
+      const eventLocation = getEventLocation(e);
+      const { data } = ctxOne.getImageData(eventLocation.x, eventLocation.y, 1, 1);
+      const hex = "#" + ("000000" + rgbToHex(data[0], data[1], data[2])).slice(-6);
+      setPixelRgb(hex);
+    }
+  }
+
+  const handlePicker = () => {
+    setEnabled(!enabled);
   }
 
   return (
     <>
-      <h1>{pixelRgb ? pixelRgb : 'Hover pointer over the picture'}</h1>
+      <div className="topContainer">
+        <label>
+          <img className="pickerIcon" src={icon} alt="picker" />
+          <input type="checkbox" onChange={handlePicker} />
+        </label>
+        <div className="divRight">
+          <p>{pixelRgb && enabled ? pixelRgb : ''}</p>
+          <div className="indicatorContainer">
+            <canvas
+              ref={canvasRefTwo}
+              className="canvasSmall"
+              width="60"
+              height="60"
+              />
+          </div>
+        </div>
+      </div>
+      
       <div className='image'>
         <img ref={imageRef} src={beach} alt="beach"/>
       </div>
-      <div className="roundContainer">
-        <canvas
-          ref={canvasRefTwo}
-          className="canvasSmall"
-          width="120"
-          height="120"
-          />
-      </div>
+      
       <canvas
         onMouseMove={mouseMoveHandle}
         ref={canvasRefOne}
